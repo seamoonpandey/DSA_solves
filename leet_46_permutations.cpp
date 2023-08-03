@@ -9,14 +9,23 @@ class Solution
 public:
     int factorial(int x)
     {
-        int n = x;
-        int prod = 1;
-        while (n != 0)
-        {
-            prod *= (n--);
-        }
-        return prod;
+        if (x <= 1)
+            return 1;
+        return x * factorial(x - 1);
     }
+
+    // Custom comparator for next_permutation
+    struct Compare
+    {
+        bool operator()(const int &a, const int &b) const
+        {
+            if (a >= 0 && b < 0)
+                return true;
+            if (a < 0 && b >= 0)
+                return false;
+            return a < b;
+        }
+    };
 
     vector<vector<int>> permute(vector<int> &nums)
     {
@@ -25,10 +34,12 @@ public:
 
         vector<vector<int>> results;
 
+        sort(nums.begin(), nums.end(), Compare());
+
         do
         {
             results.push_back(nums);
-        } while (next_permutation(nums.begin(), nums.end()));
+        } while (next_permutation(nums.begin(), nums.end(), Compare()));
 
         return results;
     }
